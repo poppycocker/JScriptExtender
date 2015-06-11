@@ -1,16 +1,18 @@
 this.StreamReaderU = this.StreamReaderU || Class.extend({
-	initialize: function(filename) {
+	initialize: function(filename, lineSeparator) {
+		if (!filename) {
+			throw new Error('StreamReaderU: filename is not defined.');
+		}
 		this.sr = new ActiveXObject("ADODB.Stream");
 		this.sr.Type = StreamUOpts.adTypeText;
 		this.sr.charset = "utf-8";
-		if (filename) {
-			this.OpenNew(filename);
+		this.sr.LineSeparator = lineSeparator || StreamUOpts.adCRLF;
+		try {
+			this.sr.Open();
+			this.sr.LoadFromFile(filename);
+		} catch (e) {
+			throw new Error('StreamReaderU: failed to open file.');
 		}
-	},
-	Open: function(filename) {
-		this.sr.Open();
-		this.sr.LoadFromFile(filename);
-		return true;
 	},
 	Close: function() {
 		this.sr.Close();

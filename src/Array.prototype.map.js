@@ -6,7 +6,7 @@ Array.prototype.map = Array.prototype.map || function(callback, thisArg) {
 	var T, A, k;
 
 	if (this == null) {
-		throw new TypeError(" this is null or not defined");
+		throw new TypeError("Array.prototype.map: this is null or not defined");
 	}
 
 	// 1. Let O be the result of calling ToObject passing the |this| value as the argument.
@@ -19,7 +19,7 @@ Array.prototype.map = Array.prototype.map || function(callback, thisArg) {
 	// 4. If IsCallable(callback) is false, throw a TypeError exception.
 	// See: http://es5.github.com/#x9.11
 	if ({}.toString.call(callback) != "[object Function]") {
-		throw new TypeError(callback + " is not a function");
+		throw new TypeError("Array.prototype.map: " + callback + " is not a function");
 	}
 
 	// 5. If thisArg was supplied, let T be thisArg; else let T be undefined.

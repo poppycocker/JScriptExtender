@@ -4,7 +4,7 @@
 Array.prototype.forEach = Array.prototype.forEach || function(callback, thisArg) {
 	var T, k;
 	if (this == null) {
-		throw new TypeError(" this is null or not defined");
+		throw new TypeError("Array.prototype.forEach: this is null or not defined");
 	}
 	// 1. Let O be the result of calling ToObject passing the |this| value as the argument.
 	var O = Object(this);
@@ -14,7 +14,7 @@ Array.prototype.forEach = Array.prototype.forEach || function(callback, thisArg)
 	// 4. If IsCallable(callback) is false, throw a TypeError exception.
 	// See: http://es5.github.com/#x9.11
 	if ({}.toString.call(callback) != "[object Function]") {
-		throw new TypeError(callback + " is not a function");
+		throw new TypeError("Array.prototype.forEach: " + callback + " is not a function");
 	}
 	// 5. If thisArg was supplied, let T be thisArg; else let T be undefined.
 	if (thisArg) {

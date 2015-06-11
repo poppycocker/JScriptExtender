@@ -1,18 +1,12 @@
 // INIファイル
 this.Ini = this.Ini || Class.extend({
-	initialize: function() {
-
+	initialize: function(filename) {
+		this.sr = new StreamReader(filename);
 	},
-	LoadFrom: function(filename) {
-		var sr = new StreamReader(),
-			data, line, pos, key, val;
-		if (!sr.Open(filename)) {
-			return null;
-		}
-		data = [];
-		line = null;
-		while ((line = sr.ReadLine()) !== null) {
-			if (line.length === 0 || line.substr(0, 2) === '//') {
+	Load: function() {
+		var data = [], line, pos, key, val;
+		while ((line = this.sr.ReadLine()) !== null) {
+			if (line.length === 0 || line.substr(0, 2) === '//' || line.charAt(0) === '\'') {
 				continue; // 空白行,コメントは読み飛ばし
 			}
 			pos = line.indexOf('=');
@@ -21,9 +15,12 @@ this.Ini = this.Ini || Class.extend({
 			}
 			key = line.substr(0, pos).trim();
 			val = line.substr(pos + 1).trim();
+			if (val.match(/^(\-){0,1}\d+(\.\d+){0,1}$/g)) {
+				val = +val;
+			}
 			data[key] = val;
 		}
-		sr.Close();
+		this.sr.Close();
 		return data;
 	}
 });

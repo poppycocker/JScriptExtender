@@ -1,16 +1,19 @@
 this.StreamWriterU = this.StreamWriterU || Class.extend({
-	initialize: function(filename) {
+	initialize: function(filename, lineSeparator) {
+		if (!filename) {
+			throw new Error('StreamWriterU: filename is not defined.');
+		}
 		this.sw = new ActiveXObject("ADODB.Stream");
 		this.sw.Type = StreamUOpts.adTypeText;
 		this.sw.charset = "utf-8";
-		if (filename) {
-			this.OpenNew(filename);
-		}
-	},
-	OpenNew: function(filename) {
+		this.sw.LineSeparator = lineSeparator || StreamUOpts.adCRLF;
 		this.filename = filename;
-		this.sw.Open();
-		return true;
+		try {
+			this.sw.Open();
+			this.Save();
+		} catch (e) {
+			throw new Error('StreamWriterU: failed to open/create file.');
+		}
 	},
 	Close: function() {
 		// delete BOM
@@ -21,10 +24,7 @@ this.StreamWriterU = this.StreamWriterU || Class.extend({
 		this.sw.Close();
 		this.sw.Open();
 		this.sw.Write(byteData);
-
-		this.sw.SaveToFile(
-			this.filename, StreamUOpts.adSaveCreateOverWrite
-		);
+		this.Save();
 		this.sw.Close();
 	},
 	WriteLine: function(line) {
@@ -32,5 +32,8 @@ this.StreamWriterU = this.StreamWriterU || Class.extend({
 	},
 	Write: function(contents) {
 		this.sw.WriteText(contents, StreamUOpts.adWriteChar);
+	},
+	Save: function() {
+		this.sw.SaveToFile(this.filename, StreamUOpts.adSaveCreateOverWrite);
 	}
 });

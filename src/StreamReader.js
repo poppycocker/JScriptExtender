@@ -1,14 +1,14 @@
 this.StreamReader = this.StreamReader || Class.extend({
 	initialize: function(filename) {
-		this.sr = null;
-		if (filename) {
-			return this.Open(filename);
+		if (!filename) {
+			throw new Error('StreamReader: filename is not defined.');
 		}
-	},
-	Open: function(filename) {
 		var fso = WScript.CreateObject('Scripting.FileSystemObject');
-		this.sr = fso.OpenTextFile(filename, 1, false);
-		return !!this.sr;
+		try {
+			this.sr = fso.OpenTextFile(filename, 1, false);
+		} catch(e) {
+			throw new Error('StreamReader: failed to open file.');
+		}
 	},
 	Close: function() {
 		this.sr.Close();

@@ -1,15 +1,19 @@
 // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
 Array.prototype.filter = Array.prototype.filter || function(fun /*, thisp */ ) {
 	"use strict";
-	if (this == null) throw new TypeError();
+	if (this == null) {
+		throw new TypeError("Array.prototype.filter: this is null or not defined.");
+	}
 
 	var t = Object(this),
 		len = t.length >>> 0;
 
-	if (typeof fun != "function") throw new TypeError();
+	if (typeof fun != "function") {
+		throw new TypeError("Array.prototype.filter: callback is not a function.");
+	}
 
 	var res = [],
-	thisp = arguments[1];
+		thisp = arguments[1];
 
 	for (var i = 0; i < len; i++) {
 		if (i in t) {

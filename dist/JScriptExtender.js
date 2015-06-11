@@ -14,15 +14,19 @@ Array.FromCollection = Array.FromCollection || function(collection) {
 // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
 Array.prototype.filter = Array.prototype.filter || function(fun /*, thisp */ ) {
 	"use strict";
-	if (this == null) throw new TypeError();
+	if (this == null) {
+		throw new TypeError("Array.prototype.filter: this is null or not defined.");
+	}
 
 	var t = Object(this),
 		len = t.length >>> 0;
 
-	if (typeof fun != "function") throw new TypeError();
+	if (typeof fun != "function") {
+		throw new TypeError("Array.prototype.filter: callback is not a function.");
+	}
 
 	var res = [],
-	thisp = arguments[1];
+		thisp = arguments[1];
 
 	for (var i = 0; i < len; i++) {
 		if (i in t) {
@@ -33,14 +37,13 @@ Array.prototype.filter = Array.prototype.filter || function(fun /*, thisp */ ) {
 
 	return res;
 };
-
 // Production steps of ECMA-262, Edition 5, 15.4.4.18
 // Reference: http://es5.github.com/#x15.4.4.18
 // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
 Array.prototype.forEach = Array.prototype.forEach || function(callback, thisArg) {
 	var T, k;
 	if (this == null) {
-		throw new TypeError(" this is null or not defined");
+		throw new TypeError("Array.prototype.forEach: this is null or not defined");
 	}
 	// 1. Let O be the result of calling ToObject passing the |this| value as the argument.
 	var O = Object(this);
@@ -50,7 +53,7 @@ Array.prototype.forEach = Array.prototype.forEach || function(callback, thisArg)
 	// 4. If IsCallable(callback) is false, throw a TypeError exception.
 	// See: http://es5.github.com/#x9.11
 	if ({}.toString.call(callback) != "[object Function]") {
-		throw new TypeError(callback + " is not a function");
+		throw new TypeError("Array.prototype.forEach: " + callback + " is not a function");
 	}
 	// 5. If thisArg was supplied, let T be thisArg; else let T be undefined.
 	if (thisArg) {
@@ -78,7 +81,6 @@ Array.prototype.forEach = Array.prototype.forEach || function(callback, thisArg)
 	}
 	// 8. return undefined
 };
-
 // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array/map
 // Production steps of ECMA-262, Edition 5, 15.4.4.19
 // Reference: http://es5.github.com/#x15.4.4.19
@@ -87,7 +89,7 @@ Array.prototype.map = Array.prototype.map || function(callback, thisArg) {
 	var T, A, k;
 
 	if (this == null) {
-		throw new TypeError(" this is null or not defined");
+		throw new TypeError("Array.prototype.map: this is null or not defined");
 	}
 
 	// 1. Let O be the result of calling ToObject passing the |this| value as the argument.
@@ -100,7 +102,7 @@ Array.prototype.map = Array.prototype.map || function(callback, thisArg) {
 	// 4. If IsCallable(callback) is false, throw a TypeError exception.
 	// See: http://es5.github.com/#x9.11
 	if ({}.toString.call(callback) != "[object Function]") {
-		throw new TypeError(callback + " is not a function");
+		throw new TypeError("Array.prototype.map: " + callback + " is not a function");
 	}
 
 	// 5. If thisArg was supplied, let T be thisArg; else let T be undefined.
@@ -150,31 +152,36 @@ Array.prototype.map = Array.prototype.map || function(callback, thisArg) {
 	// 9. return A
 	return A;
 };
-
 // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce
 Array.prototype.reduce = Array.prototype.reduce || function(accumulator) {
-	if (this === null || this === undefined) throw new TypeError("Object is null or undefined");
+	if (this === null || this === undefined) {
+		throw new TypeError("Array.prototype.reduce: Object is null or undefined");
+	}
 	var i = 0,
 		l = this.length >> 0,
 		curr;
-	if (typeof accumulator !== "function") // ES5 : "If IsCallable(callbackfn) is false, throw a TypeError exception."
-		throw new TypeError("First argument is not callable");
+	if (typeof accumulator !== "function") { // ES5 : "If IsCallable(callbackfn) is false, throw a TypeError exception."
+		throw new TypeError("Array.prototype.reduce: First argument is not callable");
+	}
 
 	if (arguments.length < 2) {
-		if (l === 0) throw new TypeError("Array length is 0 and no second argument");
+		if (l === 0) {
+			throw new TypeError("Array.prototype.reduce: Array length is 0 and no second argument");
+		}
 		curr = this[0];
 		i = 1; // start accumulating at the second element
 	} else
 		curr = arguments[1];
 
 	while (i < l) {
-		if (i in this) curr = accumulator.call(undefined, curr, this[i], i, this);
+		if (i in this) {
+			curr = accumulator.call(undefined, curr, this[i], i, this);
+		}
 		++i;
 	}
 
 	return curr;
 };
-
 // 現在日時の取得
 Date.prototype.getYMDhms = Date.prototype.getYMDhms || function() {
 	function padZero(v /* 0-99 */ ) {
@@ -187,6 +194,9 @@ Date.prototype.getYMDhms = Date.prototype.getYMDhms || function() {
 		.replace('[h]', padZero(this.getHours()))
 		.replace('[m]', padZero(this.getMinutes()))
 		.replace('[s]', padZero(this.getSeconds()));
+};
+String.prototype.trim = String.prototype.trim || function() {
+	return this.replace(/^\s+|\s+$/g, '');
 };
 // Use Leaflet.js's L.Class as a reference
 // http://leafletjs.com/
@@ -238,15 +248,15 @@ this.Class.extend = function(props) {
 };
 this.StreamReader = this.StreamReader || Class.extend({
 	initialize: function(filename) {
-		this.sr = null;
-		if (filename) {
-			return this.Open(filename);
+		if (!filename) {
+			throw new Error('StreamReader: filename is not defined.');
 		}
-	},
-	Open: function(filename) {
 		var fso = WScript.CreateObject('Scripting.FileSystemObject');
-		this.sr = fso.OpenTextFile(filename, 1, false);
-		return !!this.sr;
+		try {
+			this.sr = fso.OpenTextFile(filename, 1, false);
+		} catch(e) {
+			throw new Error('StreamReader: failed to open file.');
+		}
 	},
 	Close: function() {
 		this.sr.Close();
@@ -262,15 +272,15 @@ this.StreamReader = this.StreamReader || Class.extend({
 });
 this.StreamWriter = this.StreamWriter || Class.extend({
 	initialize: function(filename) {
-		this.sw = null;
-		if (filename) {
-			return this.OpenNew(filename);
+		if (!filename) {
+			throw new Error('StreamWriter: filename is not defined.');
 		}
-	},
-	OpenNew: function(filename) {
 		var fso = WScript.CreateObject('Scripting.FileSystemObject');
-		this.sw = fso.CreateTextFile(filename, true);
-		return !!this.sw;
+		try {
+			this.sw = fso.CreateTextFile(filename, true);
+		} catch (e) {
+			throw new Error('StreamWriter: failed to open/create file.');
+		}
 	},
 	Close: function() {
 		this.sw.Close();
@@ -312,18 +322,20 @@ this.StreamUOpts = this.StreamUOpts || {
 };
 
 this.StreamReaderU = this.StreamReaderU || Class.extend({
-	initialize: function(filename) {
+	initialize: function(filename, lineSeparator) {
+		if (!filename) {
+			throw new Error('StreamReaderU: filename is not defined.');
+		}
 		this.sr = new ActiveXObject("ADODB.Stream");
 		this.sr.Type = StreamUOpts.adTypeText;
 		this.sr.charset = "utf-8";
-		if (filename) {
-			this.OpenNew(filename);
+		this.sr.LineSeparator = lineSeparator || StreamUOpts.adCRLF;
+		try {
+			this.sr.Open();
+			this.sr.LoadFromFile(filename);
+		} catch (e) {
+			throw new Error('StreamReaderU: failed to open file.');
 		}
-	},
-	Open: function(filename) {
-		this.sr.Open();
-		this.sr.LoadFromFile(filename);
-		return true;
 	},
 	Close: function() {
 		this.sr.Close();
@@ -338,18 +350,21 @@ this.StreamReaderU = this.StreamReaderU || Class.extend({
 	}
 });
 this.StreamWriterU = this.StreamWriterU || Class.extend({
-	initialize: function(filename) {
+	initialize: function(filename, lineSeparator) {
+		if (!filename) {
+			throw new Error('StreamWriterU: filename is not defined.');
+		}
 		this.sw = new ActiveXObject("ADODB.Stream");
 		this.sw.Type = StreamUOpts.adTypeText;
 		this.sw.charset = "utf-8";
-		if (filename) {
-			this.OpenNew(filename);
-		}
-	},
-	OpenNew: function(filename) {
+		this.sw.LineSeparator = lineSeparator || StreamUOpts.adCRLF;
 		this.filename = filename;
-		this.sw.Open();
-		return true;
+		try {
+			this.sw.Open();
+			this.Save();
+		} catch (e) {
+			throw new Error('StreamWriterU: failed to open/create file.');
+		}
 	},
 	Close: function() {
 		// delete BOM
@@ -360,10 +375,7 @@ this.StreamWriterU = this.StreamWriterU || Class.extend({
 		this.sw.Close();
 		this.sw.Open();
 		this.sw.Write(byteData);
-
-		this.sw.SaveToFile(
-			this.filename, StreamUOpts.adSaveCreateOverWrite
-		);
+		this.Save();
 		this.sw.Close();
 	},
 	WriteLine: function(line) {
@@ -371,24 +383,20 @@ this.StreamWriterU = this.StreamWriterU || Class.extend({
 	},
 	Write: function(contents) {
 		this.sw.WriteText(contents, StreamUOpts.adWriteChar);
+	},
+	Save: function() {
+		this.sw.SaveToFile(this.filename, StreamUOpts.adSaveCreateOverWrite);
 	}
 });
-
 // INIファイル
 this.Ini = this.Ini || Class.extend({
-	initialize: function() {
-
+	initialize: function(filename) {
+		this.sr = new StreamReader(filename);
 	},
-	LoadFrom: function(filename) {
-		var sr = new StreamReader(),
-			data, line, pos, key, val;
-		if (!sr.Open(filename)) {
-			return null;
-		}
-		data = [];
-		line = null;
-		while ((line = sr.ReadLine()) !== null) {
-			if (line.length === 0 || line.substr(0, 2) === '//') {
+	Load: function() {
+		var data = [], line, pos, key, val;
+		while ((line = this.sr.ReadLine()) !== null) {
+			if (line.length === 0 || line.substr(0, 2) === '//' || line.charAt(0) === '\'') {
 				continue; // 空白行,コメントは読み飛ばし
 			}
 			pos = line.indexOf('=');
@@ -397,45 +405,13 @@ this.Ini = this.Ini || Class.extend({
 			}
 			key = line.substr(0, pos).trim();
 			val = line.substr(pos + 1).trim();
+			if (val.match(/^(\-){0,1}\d+(\.\d+){0,1}$/g)) {
+				val = +val;
+			}
 			data[key] = val;
 		}
-		sr.Close();
+		this.sr.Close();
 		return data;
-	}
-});
-// Fileクラス
-this.File = this.File || Class.extend({
-	ReadAllText: function(filename, unicode) {
-		var text = '';
-		var sr = !!unicode ? new StreamReaderU() : new StreamReader();
-		if (sr.Open(filename)) {
-			text = sr.ReadAll();
-			sr.Close();
-		}
-		return text;
-	},
-	ReadAllAsArray: function(filename, unicode) {
-		var result = [];
-		var sr = !!unicode ? new StreamReaderU() : new StreamReader();
-		if (sr.Open(filename)) {
-			var line;
-			while ((line = sr.ReadLine()) !== null) {
-				result.push(line);
-			}
-			sr.Close();
-		}
-		return result;
-	},
-	WriteAllText: function(filename, contents, unicode) {
-		var sw = !!unicode ? new StreamWriterU() : new StreamWriter();
-		if (sw.OpenNew(filename)) {
-			sw.Write(contents);
-			sw.Close();
-		}
-	},
-	Delete: function(filename) {
-		var fso = WScript.CreateObject('Scripting.FileSystemObject');
-		fso.DeleteFile(filename);
 	}
 });
 }).call(this);

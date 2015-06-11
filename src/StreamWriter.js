@@ -1,14 +1,14 @@
 this.StreamWriter = this.StreamWriter || Class.extend({
 	initialize: function(filename) {
-		this.sw = null;
-		if (filename) {
-			return this.OpenNew(filename);
+		if (!filename) {
+			throw new Error('StreamWriter: filename is not defined.');
 		}
-	},
-	OpenNew: function(filename) {
 		var fso = WScript.CreateObject('Scripting.FileSystemObject');
-		this.sw = fso.CreateTextFile(filename, true);
-		return !!this.sw;
+		try {
+			this.sw = fso.CreateTextFile(filename, true);
+		} catch (e) {
+			throw new Error('StreamWriter: failed to open/create file.');
+		}
 	},
 	Close: function() {
 		this.sw.Close();
