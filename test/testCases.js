@@ -99,6 +99,7 @@
 			TR.it('check behaviors', function() {
 				TR.assertEqual(' abc  '.trim(), 'abc');
 				TR.assertEqual('abc'.trim(), 'abc');
+				TR.assertEqual('ab c'.trim(), 'ab c');
 				TR.assertEqual(''.trim(), '');
 			});
 		});
@@ -310,14 +311,38 @@
 			TR.it('check existence', function() {
 				TR.assertNotUndefined(Ini);
 			});
-			TR.it('check behaviors', function() {
-				var ini = new Ini('testdata\\test.ini');
+			TR.it('check behaviors: valid ini', function() {
+				var ini = new Ini('testdata\\valid.ini');
 				var props = ini.Load();
-				TR.assertEqual(props.aaa, 123);
-				TR.assertEqual(props.bbb, -1.23);
-				TR.assertEqual(props.ccc, 'abc');
-				TR.assertUndefined(props.ddd);
-				TR.assertUndefined(props.eee);
+				TR.assertNotUndefined(props.section1);
+				TR.assertNotUndefined(props.section2);
+				TR.assertNotUndefined(props.section3);
+				TR.assertEqual(props.section1.aaa, 123);
+				TR.assertEqual(props.section1.bbb, -1.23);
+				TR.assertEqual(props.section1.ccc, 'abc');
+				TR.assertUndefined(props.section1.ddd);
+				TR.assertUndefined(props.section1.eee);
+				TR.assertEqual(props.section3.fff, '456_');
+			});
+			TR.it('check behaviors: invalid ini 1', function() {
+				var ini = new Ini('testdata\\invalid01.ini');
+				var props;
+				try {
+					props = ini.Load();
+				} catch (e) {
+					TR.assertEqual(e.message, 'Ini: declare section statement before key-value statements.');
+				}
+				TR.assertUndefined(props);
+			});
+			TR.it('check behaviors: invalid ini 2', function() {
+				var ini = new Ini('testdata\\invalid02.ini');
+				var props;
+				try {
+					props = ini.Load();
+				} catch (e) {
+					TR.assertEqual(e.message, 'Ini: the key is already defined: aaa in line:3');
+				}
+				TR.assertUndefined(props);
 			});
 		});
 	};
