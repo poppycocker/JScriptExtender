@@ -3,4 +3,4 @@
 
 :: cscript //H:CScript
 :: cscript //Nologo //U //X test_driver.wsf
-cscript //Nologo //U testDriver.wsf
+cscript //Nologo //U runTests.wsf
