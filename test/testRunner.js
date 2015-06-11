@@ -40,10 +40,7 @@
 					WScript.Echo('  * ' + c.description);
 					for (j = 0; j < c.results.length; j++) {
 						r = c.results[j];
-						idx = '';
-						if (c.results.length > 1) {
-							idx = '[[idx]/[cnt]]: '.replace('[idx]', j + 1).replace('[cnt]', c.results.length);
-						}
+						idx = '[[idx]/[cnt]]: '.replace('[idx]', j + 1).replace('[cnt]', c.results.length);
 						if (r.result) {
 							WScript.Echo('    [idx]OK.'.replace('[idx]', idx));
 						} else {
@@ -63,6 +60,13 @@
 			return v;
 		}
 		return JSON.stringify(v);
+	}
+
+	function checkState(state) {
+		if (!state) {
+			WScript.Echo('[ERROR] call "describe" and "it" before assertion.');
+		}
+		return !!state;
 	}
 
 	this.TR = {
@@ -85,21 +89,35 @@
 			var a = convertToComparable(actual),
 				e = convertToComparable(expected),
 				state = states.last();
-			if (!state) {
-				WScript.Echo('[ERROR] call "describe" and "it" before assertion.');
-				return;
+			if (checkState(state)) {
+				state.addResult('AssertEqual', a === e, a, e);
 			}
-			state.addResult('AssertEqual', a === e, a, e);
 		},
 		assertNotEqual: function(actual, expected) {
 			var a = convertToComparable(actual),
 				e = convertToComparable(expected),
 				state = states.last();
-			if (!state) {
-				WScript.Echo('[ERROR] call "describe" and "it" before assertion.');
-				return;
+			if (checkState(state)) {
+				state.addResult('AssertNotEqual', a !== e, a, e);
 			}
-			state.addResult('AssertNotEqual', a !== e, a, e);
+		},
+		assertUndefined: function(actual) {
+			var state = states.last();
+			if (checkState(state)) {
+				state.addResult('AssertUndefined', actual === undefined, actual, 'undefined');
+			}
+		},
+		assertNotUndefined: function(actual) {
+			var state = states.last();
+			if (checkState(state)) {
+				state.addResult('AssertNotUndefined', actual !== undefined, actual, 'undefined');
+			}
+		},
+		succeed: function() {
+			var state = states.last();
+			if (checkState(state)) {
+				state.addResult('', true, 0, 0);
+			}
 		}
 	};
 

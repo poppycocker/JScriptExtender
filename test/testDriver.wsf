@@ -2,7 +2,7 @@
 <script language="JavaScript" src="../dist/JScriptExtender.js"></script>
 <script language="JavaScript" src="json3.min.js"></script>
 <script language="JavaScript" src="testRunner.js"></script>
-<script language="JavaScript" src="tests.js"></script>
+<script language="JavaScript" src="testCases.js"></script>
 <script language="JavaScript">
 
 // Author: r_inoue
