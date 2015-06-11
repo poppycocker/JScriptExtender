@@ -24,6 +24,7 @@ module.exports = function(grunt) {
                     'src/Array.prototype.map.js',
                     'src/Array.prototype.reduce.js',
                     'src/Date.prototype.getYMDhms.js',
+                    'src/String.prototype.trim.js',
                     'src/Class.js',
                     'src/StreamReader.js',
                     'src/StreamWriter.js',
