@@ -6,109 +6,23 @@
 	this.Tests = {};
 	this.Tests.run = function() {
 
-		var ar = [1, 2, 3, 4, 5];
+		WScript.Echo((function() {
+			var s;
+			s = ""; // 文字列を連結します。
+			s += ScriptEngine() + " Version ";
+			s += ScriptEngineMajorVersion() + ".";
+			s += ScriptEngineMinorVersion() + ".";
+			s += ScriptEngineBuildVersion();
+			return (s);
+		})());
 		var fso = WScript.CreateObject('Scripting.FileSystemObject');
-
-		TR.describe('Array.prototype.filter', function() {
-			TR.it('check existence', function() {
-				TR.assertNotUndefined(ar.filter);
-			});
-			TR.it('check behaviors', function() {
-				TR.assertEqual([2, 4], ar.filter(function(v) {
-					return (v % 2 === 0);
-				}));
-				TR.assertEqual([], ar.filter(function(v) {
-					return (v > 10);
-				}));
-				TR.assertEqual([], ['a', 'b'].filter(function(v) {
-					return null;
-				}));
-			});
-		});
-
-		TR.describe('Array.prototype.forEach', function() {
-			TR.it('check existence', function() {
-				TR.assertNotUndefined(ar.forEach);
-			});
-			TR.it('check behaviors', function() {
-				var dst = [];
-				ar.forEach(function(v) {
-					dst.push(v);
-				});
-				TR.assertEqual(ar, dst);
-
-				dst = [];
-				ar.forEach(function(v, i) {
-					dst.push(i);
-				});
-				TR.assertEqual([0, 1, 2, 3, 4], dst);
-			});
-		});
-
-		TR.describe('Array.prototype.map', function() {
-			TR.it('check existence', function() {
-				TR.assertNotUndefined(ar.map);
-			});
-			TR.it('check behaviors', function() {
-				var squared = ar.map(function(v) {
-					return v * v;
-				});
-				TR.assertEqual(squared, [1, 4, 9, 16, 25]);
-				squared = ar.map(function(v, i) {
-					return i * i;
-				});
-				TR.assertEqual(squared, [0, 1, 4, 9, 16]);
-			});
-		});
-
-		TR.describe('Array.prototype.reduce', function() {
-			TR.it('check existence', function() {
-				TR.assertNotUndefined(ar.reduce);
-			});
-			TR.it('check behaviors', function() {
-				var reduced = ar.reduce(function(prev, current, idx, array) {
-					return prev + current;
-				});
-				TR.assertEqual(reduced, 15);
-				reduced = ar.reduce(function(prev, current, idx, array) {
-					return idx;
-				});
-				TR.assertEqual(reduced, ar.length - 1);
-				reduced = ar.reduce(function(prev, current, idx, array) {
-					return array;
-				});
-				TR.assertEqual(reduced, ar);
-			});
-		});
-
-		TR.describe('Date.prototype.getYMDhms', function() {
-			TR.it('check existence', function() {
-				var d = new Date();
-				TR.assertNotUndefined(d.getYMDhms);
-			});
-			TR.it('check behaviors', function() {
-				var d = new Date(2015, 6 - 1, 11, 1, 23, 45);
-				TR.assertEqual(d.getYMDhms(), '2015/06/11 01:23:45');
-			});
-		});
-
-		TR.describe('String.prototype.trim', function() {
-			TR.it('check existence', function() {
-				TR.assertNotUndefined('abc'.trim);
-			});
-			TR.it('check behaviors', function() {
-				TR.assertEqual(' abc  '.trim(), 'abc');
-				TR.assertEqual('abc'.trim(), 'abc');
-				TR.assertEqual('ab c'.trim(), 'ab c');
-				TR.assertEqual(''.trim(), '');
-			});
-		});
 
 		TR.describe('Class', function() {
 			TR.it('check existence', function() {
 				TR.assertNotUndefined(Class);
 				TR.assertNotUndefined(Class.extend);
 			});
+			var ar = [1, 2, 3, 4, 5];
 			var Cls1 = Class.extend({
 				initialize: function(num) {
 					this.num = num;
@@ -346,5 +260,6 @@
 			});
 		});
 	};
+
 
 }).call(this);

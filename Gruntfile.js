@@ -6,7 +6,7 @@ module.exports = function(grunt) {
             options: {
                 stripBanners: false,
                 banner: [
-                    '(function() {',
+                    ';(function() {',
                     '"use strict";',
                     '',
                     ''
@@ -18,21 +18,15 @@ module.exports = function(grunt) {
             files: {
                 // 元ファイルの指定
                 src: [
-                    'src/Array.FromCollection.js',
-                    'src/Array.prototype.filter.js',
-                    'src/Array.prototype.forEach.js',
-                    'src/Array.prototype.map.js',
-                    'src/Array.prototype.reduce.js',
-                    'src/Date.prototype.getYMDhms.js',
-                    'src/String.prototype.trim.js',
+                    'ext_src/es5-shim.js',
+                    'ext_src/json3.js',
                     'src/Class.js',
                     'src/StreamReader.js',
                     'src/StreamWriter.js',
                     'src/StreamUOpts.js',
                     'src/StreamReaderU.js',
                     'src/StreamWriterU.js',
-                    'src/Ini.js',
-                    'src/File.js',
+                    'src/Ini.js'
                 ],
                 // 出力ファイルの指定
                 dest: 'dist/JScriptExtender.js'
