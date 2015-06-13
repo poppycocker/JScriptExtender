@@ -1,0 +1,25 @@
+{
+  "name": "JScriptExtender",
+  "version": "0.0.1",
+  "homepage": "https://github.com/poppycocker/JScriptExtender",
+  "authors": [
+    "poppycocker"
+  ],
+  "description": "JScriptExtender",
+  "main": "dist/JScriptExtender.js",
+  "keywords": [
+    "JScript"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "json3": "~3.3.2",
+    "es5-shim": "~4.1.6"
+  }
+}
