@@ -43,7 +43,7 @@
 					return this.txt;
 				}
 			});
-			TR.it('check behaviors: construction', function() {
+			TR.it('check behavior: construction', function() {
 				TR.assertNotUndefined(Cls1.extend);
 				TR.assertNotUndefined(Cls1.constant);
 				TR.assertEqual(Cls1.constant, ar);
@@ -52,7 +52,7 @@
 				TR.assertNotUndefined(c1.getNum);
 				TR.assertEqual(c1.getNum(), 100);
 			});
-			TR.it('check behaviors: inheritance', function() {
+			TR.it('check behavior: inheritance', function() {
 				TR.assertNotUndefined(Cls2.constant);
 				TR.assertEqual(Cls2.constant, ar);
 				var c2 = new Cls2(100, 'abc');
@@ -71,7 +71,7 @@
 				TR.assertNotUndefined(SyntaxError);
 				TR.assertNotUndefined(URIError);
 			});
-			TR.it('check behaviors', function() {
+			TR.it('check behavior', function() {
 				var msg = 'throw new Error';
 				try {
 					throw new Error(msg);
@@ -85,7 +85,7 @@
 			TR.it('check existence', function() {
 				TR.assertNotUndefined(StreamReader);
 			});
-			TR.it('check behaviors: errors', function() {
+			TR.it('check behavior: errors', function() {
 				var sr;
 				try {
 					sr = new StreamReader();
@@ -98,7 +98,7 @@
 					TR.assertEqual(e.message, 'StreamReader: failed to open file.');
 				}
 			});
-			TR.it('check behaviors: reading', function() {
+			TR.it('check behavior: reading', function() {
 				var sr = new StreamReader('testdata\\test.txt');
 				var line = sr.ReadLine();
 				TR.assertEqual(line, '123');
@@ -114,7 +114,7 @@
 			TR.it('check existence', function() {
 				TR.assertNotUndefined(StreamReaderU);
 			});
-			TR.it('check behaviors: errors', function() {
+			TR.it('check behavior: errors', function() {
 				var sr;
 				try {
 					sr = new StreamReaderU();
@@ -127,7 +127,7 @@
 					TR.assertEqual(e.message, 'StreamReaderU: failed to open file.');
 				}
 			});
-			TR.it('check behaviors: reading', function() {
+			TR.it('check behavior: reading', function() {
 				var sr = new StreamReaderU('testdata\\test_u_lf.txt', StreamUOpts.adLF);
 				var line = sr.ReadLine();
 				TR.assertEqual(line, '\u3042\u3044\u3046');
@@ -143,7 +143,7 @@
 			TR.it('check existence', function() {
 				TR.assertNotUndefined(StreamWriter);
 			});
-			TR.it('check behaviors: errors', function() {
+			TR.it('check behavior: errors', function() {
 				var sr;
 				try {
 					sr = new StreamWriter();
@@ -156,7 +156,7 @@
 					TR.assertEqual(e.message, 'StreamWriter: failed to open/create file.');
 				}
 			});
-			TR.it('check behaviors: write lines', function() {
+			TR.it('check behavior: write lines', function() {
 				var filename = 'testdata\\test_write.txt';
 				var sw = new StreamWriter(filename);
 				sw.WriteLine('abcde');
@@ -166,7 +166,7 @@
 				sr.Close();
 				fso.DeleteFile(filename);
 			});
-			TR.it('check behaviors: write contents', function() {
+			TR.it('check behavior: write contents', function() {
 				var filename = 'testdata\\test_write.txt';
 				var sw = new StreamWriter(filename);
 				sw.Write('abcde\r\n12345\r\n');
@@ -184,7 +184,7 @@
 			TR.it('check existence', function() {
 				TR.assertNotUndefined(StreamWriterU);
 			});
-			TR.it('check behaviors: errors', function() {
+			TR.it('check behavior: errors', function() {
 				var sr;
 				try {
 					sr = new StreamWriterU();
@@ -197,7 +197,7 @@
 					TR.assertEqual(e.message, 'StreamWriterU: failed to open/create file.');
 				}
 			});
-			TR.it('check behaviors: write lines', function() {
+			TR.it('check behavior: write lines', function() {
 				var filename = 'testdata\\test_write_u.txt';
 				var sw = new StreamWriterU(filename);
 				sw.WriteLine('\u3042\u3044\u3046');
@@ -207,7 +207,7 @@
 				sr.Close();
 				fso.DeleteFile(filename);
 			});
-			TR.it('check behaviors: write contents', function() {
+			TR.it('check behavior: write contents', function() {
 				var filename = 'testdata\\test_write.txt';
 				var sw = new StreamWriterU(filename);
 				sw.Write('\u3042\u3044\u3046\n12345\n');
@@ -225,7 +225,7 @@
 			TR.it('check existence', function() {
 				TR.assertNotUndefined(Ini);
 			});
-			TR.it('check behaviors: valid ini', function() {
+			TR.it('check behavior: valid ini', function() {
 				var ini = new Ini('testdata\\valid.ini');
 				var props = ini.Load();
 				TR.assertNotUndefined(props.section1);
@@ -238,7 +238,7 @@
 				TR.assertUndefined(props.section1.eee);
 				TR.assertEqual(props.section3.fff, '456_');
 			});
-			TR.it('check behaviors: invalid ini 1', function() {
+			TR.it('check behavior: invalid ini 1', function() {
 				var ini = new Ini('testdata\\invalid01.ini');
 				var props;
 				try {
@@ -248,7 +248,7 @@
 				}
 				TR.assertUndefined(props);
 			});
-			TR.it('check behaviors: invalid ini 2', function() {
+			TR.it('check behavior: invalid ini 2', function() {
 				var ini = new Ini('testdata\\invalid02.ini');
 				var props;
 				try {
@@ -259,6 +259,7 @@
 				TR.assertUndefined(props);
 			});
 		});
+
 	};
 
 
