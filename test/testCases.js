@@ -1,14 +1,11 @@
-// var objFso = WScript.CreateObject('Scripting.FileSystemObject');
-// var objApl = WScript.CreateObject("Shell.Application");
-
 (function() {
-
 	this.Tests = {};
 	this.Tests.run = function() {
 
+		// Show engine version
 		WScript.Echo((function() {
 			var s;
-			s = ""; // 文字列を連結します。
+			s = "";
 			s += ScriptEngine() + " Version ";
 			s += ScriptEngineMajorVersion() + ".";
 			s += ScriptEngineMinorVersion() + ".";
@@ -16,6 +13,22 @@
 			return (s);
 		})());
 		var fso = WScript.CreateObject('Scripting.FileSystemObject');
+
+		TR.describe('Arguments', function() {
+			TR.it('check existence', function() {
+				TR.assertNotUndefined(Arguments);
+				TR.assertNotUndefined(Arguments.Get);
+			});
+			TR.it('check behavior', function() {
+				var args = Arguments.Get();
+				TR.assertNotUndefined(args.length);
+				TR.assertEqual(args.length, 2);
+				TR.assertEqual(args[0], 'arg0');
+				TR.assertEqual(args[1], 'arg1');
+				TR.assertEqual(args.arg2, '123');
+				TR.assertUndefined(args.arg3);
+			});
+		});
 
 		TR.describe('Class', function() {
 			TR.it('check existence', function() {
@@ -261,6 +274,5 @@
 		});
 
 	};
-
 
 }).call(this);

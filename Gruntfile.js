@@ -34,6 +34,7 @@ module.exports = function(grunt) {
                 src: [
                     'ext_src/es5-shim.js',
                     'ext_src/json3.js',
+                    'src/Arguments.js',
                     'src/Class.js',
                     'src/StreamReader.js',
                     'src/StreamWriter.js',
