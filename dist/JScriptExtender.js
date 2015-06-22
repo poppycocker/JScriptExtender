@@ -2366,7 +2366,17 @@ if (parseInt(ws + '08') !== 8 || parseInt(ws + '0x16') !== 22) {
   }
 }).call(this);
 
+/** @namespace Arguments */
 this.Arguments = this.Arguments || {
+	/**
+	 * Get arguments given by console.
+	 * @memberof Arguments
+	 * @returns {Object} Deserialized arguments.
+	 * @example
+	 * // (cmd) > cscript foo.wsf arg0 arg1 /arg2:123 /arg3
+	 * var args = Arguments.Get();
+	 * args; => {'0': 'arg0', '1': 'arg1', 'arg2': '123'} // arg3 is undefined
+	 */
 	Get: function() {
 		function convertToArray(collection) {
 			var e = new Enumerator(collection),
@@ -2391,7 +2401,40 @@ this.Arguments = this.Arguments || {
 };
 // Use Leaflet.js's L.Class as a reference
 // http://leafletjs.com/
+
+/** @namespace */
 this.Class = function() {};
+/**
+ * Using Leaflet.js's L.Class as a reference. {@link http://leafletjs.com/}
+ * @param {Object} props Generate an extended class from given props.
+ * @returns {Function} The constructor of extended class.
+ * @example
+ *  var Extended = Class.extend({
+ *    // 'initialize' works as a constructor.
+ *    initialize: function(arg) {
+ *      this.arg = arg;
+ *    },
+ *    // props in 'statics' are set as static(class) members.
+ *    statics: {
+ *      staticFunc: function() {
+ *        return 'static method!';
+ *      },
+ *      staticProp: 'static prop!'
+ *    },
+ *    // this is a instance method.
+ *    func: function() {
+ *      return 'instance method! ' + arg;
+ *    }
+ * });
+ *
+ * // calling static(class) members.
+ * Extended.staticFunc(); // => 'static method!'
+ * Extended.staticProp;   // => 'static prop!'
+ * // constructs with arguments (method 'initialize' will be called).
+ * var ex = new Extended('foo bar');
+ * // calling instance member
+ *  ex.func();   // => 'instance method! foo bar'
+ */
 this.Class.extend = function(props) {
 	var NewClass, F, proto, i, parent;
 	var extend = function(dst) { // (Object[, Object, ...]) ->
@@ -2437,7 +2480,14 @@ this.Class.extend = function(props) {
 	NewClass.__super__ = parent.prototype;
 	return NewClass;
 };
-this.StreamReader = this.StreamReader || Class.extend({
+this.StreamReader = this.StreamReader || Class.extend( /** @lends StreamReader# */ {
+	/**
+	 * @class Stream reader for a text file.
+	 * @param {String} filename name of the text file to open.
+	 * @augments Class
+	 * @constructs
+	 * @throws {Error} when the filename is falsy value or when failed to open file.
+	 */
 	initialize: function(filename) {
 		if (!filename) {
 			throw new Error('StreamReader: filename is not defined.');
@@ -2445,23 +2495,41 @@ this.StreamReader = this.StreamReader || Class.extend({
 		var fso = WScript.CreateObject('Scripting.FileSystemObject');
 		try {
 			this.sr = fso.OpenTextFile(filename, 1, false);
-		} catch(e) {
+		} catch (e) {
 			throw new Error('StreamReader: failed to open file.');
 		}
 	},
+	/**
+	 * Close current text stream.
+	 */
 	Close: function() {
 		this.sr.Close();
 	},
+	/**
+	 * Read 1 line from text file and forward cursor.
+	 * @returns {String} text of a line.
+	 */
 	ReadLine: function() {
 		if (this.sr.AtEndOfStream) return null;
 		return this.sr.ReadLine();
 	},
+	/**
+	 * Read all lines from text file.
+	 * @returns {String} all text of a file.
+	 */
 	ReadAll: function() {
 		if (this.sr.AtEndOfStream) return '';
 		return this.sr.ReadAll();
 	}
 });
-this.StreamWriter = this.StreamWriter || Class.extend({
+this.StreamWriter = this.StreamWriter || Class.extend( /** @lends StreamWriter# */ {
+	/**
+	 * @class Stream writer for a text file.
+	 * @param {String} filename name of the text file to open/create.
+	 * @augments Class
+	 * @constructs
+	 * @throws {Error} when the filename is falsy value or when failed to open file.
+	 */
 	initialize: function(filename) {
 		if (!filename) {
 			throw new Error('StreamWriter: filename is not defined.');
@@ -2473,46 +2541,127 @@ this.StreamWriter = this.StreamWriter || Class.extend({
 			throw new Error('StreamWriter: failed to open/create file.');
 		}
 	},
+	/**
+	 * Close current text stream.
+	 */
 	Close: function() {
 		this.sw.Close();
 	},
+	/**
+	 * Write 1 line to tail of the file.
+	 * @param {String} text to write.
+	 */
 	WriteLine: function(line) {
 		this.sw.WriteLine(line);
 	},
+	/**
+	 * Write text to tail of the file.
+	 * @param {String} text to write.
+	 */
 	Write: function(contents) {
 		this.sw.Write(contents);
 	}
 });
+/** @namespace StreamUOpts */
 this.StreamUOpts = this.StreamUOpts || {
-	// 保存データの種類
-	// StreamTypeEnum
-	// http://msdn.microsoft.com/ja-jp/library/cc389884.aspx
-	adTypeBinary: 1, // バイナリ
-	adTypeText: 2, // テキスト
-	// 読み込み方法
-	// StreamReadEnum
-	// http://msdn.microsoft.com/ja-jp/library/cc389881.aspx
-	adReadAll: -1, // 全行
-	adReadLine: -2, // 一行ごと
-	// 書き込み方法
-	// StreamWriteEnum
-	// http://msdn.microsoft.com/ja-jp/library/cc389886.aspx
-	adWriteChar: 0, // 改行なし
-	adWriteLine: 1, // 改行あり
-	// ファイルの保存方法
-	// SaveOptionsEnum
-	// http://msdn.microsoft.com/ja-jp/library/cc389870.aspx
-	adSaveCreateNotExist: 1, // ない場合は新規作成
-	adSaveCreateOverWrite: 2, // ある場合は上書き
-	// 改行コード指定
-	// LineSeparatorsEnum
-	// https://msdn.microsoft.com/ja-jp/library/cc389826.aspx
+	/**
+	 * StreamTypeEnum/adTypeBinary:
+	 *     Set to ADODB.Stream#Type to read file as binary.
+	 *     {@link http://msdn.microsoft.com/ja-jp/library/cc389884.aspx}
+	 * @memberof StreamUOpts
+	 * @const
+	 */
+	adTypeBinary: 1,
+	/**
+	 * StreamTypeEnum/adTypeText:
+	 *     Set to ADODB.Stream#Type to read file as text.
+	 *     {@link http://msdn.microsoft.com/ja-jp/library/cc389884.aspx}
+	 * @memberof StreamUOpts
+	 * @const
+	 */
+	adTypeText: 2,
+	/**
+	 * StreamReadEnum/adReadAll:
+	 *     Set to ADODB.Stream#ReadText to read all text.
+	 *     {@link http://msdn.microsoft.com/ja-jp/library/cc389881.aspx}
+	 * @memberof StreamUOpts
+	 * @const
+	 */
+	adReadAll: -1,
+	/**
+	 * StreamReadEnum/adReadLine:
+	 *     Set to ADODB.Stream#ReadText to read text per line.
+	 *     {@link http://msdn.microsoft.com/ja-jp/library/cc389881.aspx}
+	 * @memberof StreamUOpts
+	 * @const
+	 */
+	adReadLine: -2,
+	/**
+	 * StreamWriteEnum/adWriteChar:
+	 *     Set to ADODB.Stream#WriteText to write text without line break.
+	 *     {@link http://msdn.microsoft.com/ja-jp/library/cc389886.aspx}
+	 * @memberof StreamUOpts
+	 * @const
+	 */
+	adWriteChar: 0,
+	/**
+	 * StreamWriteEnum/adWriteLine:
+	 *     Set to ADODB.Stream#WriteText to write text with line break.
+	 *     {@link http://msdn.microsoft.com/ja-jp/library/cc389886.aspx}
+	 * @memberof StreamUOpts
+	 * @const
+	 */
+	adWriteLine: 1,
+	/**
+	 * SaveOptionsEnum/adSaveCreateNotExist:
+	 *     Set to ADODB.Stream#SaveToFile to create the new file.
+	 *     {@link http://msdn.microsoft.com/ja-jp/library/cc389870.aspx}
+	 * @memberof StreamUOpts
+	 * @const
+	 */
+	adSaveCreateNotExist: 1,
+	/**
+	 * SaveOptionsEnum/adSaveCreateOverWrite:
+	 *     Set to ADODB.Stream#SaveToFile to overwrite the file.
+	 *     {@link http://msdn.microsoft.com/ja-jp/library/cc389870.aspx}
+	 * @memberof StreamUOpts
+	 * @const
+	 */
+	adSaveCreateOverWrite: 2,
+	/**
+	 * LineSeparatorsEnum/adCR:
+	 *     Set to ADODB.Stream#LineSeparator to set line separator to CR(\r)
+	 * @memberof StreamUOpts
+	 * @const
+	 * https://msdn.microsoft.com/ja-jp/library/cc389826.aspx
+	 */
 	adCR: 13,
+	/**
+	 * LineSeparatorsEnum/adCRLF:
+	 *     Set to ADODB.Stream#LineSeparator to set line separator to CRLF(\r\n)
+	 * @memberof StreamUOpts
+	 * @const
+	 * https://msdn.microsoft.com/ja-jp/library/cc389826.aspx
+	 */
 	adCRLF: -1,
+	/**
+	 * LineSeparatorsEnum/adLF:
+	 *     Set to ADODB.Stream#LineSeparator to set line separator to LF(\n)
+	 * @memberof StreamUOpts
+	 * @const
+	 * https://msdn.microsoft.com/ja-jp/library/cc389826.aspx
+	 */
 	adLF: 10
 };
-
-this.StreamReaderU = this.StreamReaderU || Class.extend({
+this.StreamReaderU = this.StreamReaderU || Class.extend( /** @lends StreamReaderU# */ {
+	/**
+	 * @class Stream reader for a utf-8 text file.
+	 * @param {String} filename name of the text file to open.
+	 * @param {Number} specifier of line separator. See {@link StreamUOpts}
+	 * @augments Class
+	 * @constructs
+	 * @throws {Error} when the filename is falsy value or when failed to open file.
+	 */
 	initialize: function(filename, lineSeparator) {
 		if (!filename) {
 			throw new Error('StreamReaderU: filename is not defined.');
@@ -2528,19 +2677,38 @@ this.StreamReaderU = this.StreamReaderU || Class.extend({
 			throw new Error('StreamReaderU: failed to open file.');
 		}
 	},
+	/**
+	 * Close current text stream.
+	 */
 	Close: function() {
 		this.sr.Close();
 	},
+	/**
+	 * Read 1 line from text file and forward cursor.
+	 * @returns {String} text of a line.
+	 */
 	ReadLine: function() {
 		if (this.sr.EOS) return null;
 		return this.sr.ReadText(StreamUOpts.adReadLine);
 	},
+	/**
+	 * Read all lines from text file.
+	 * @returns {String} all text of a file.
+	 */
 	ReadAll: function() {
 		if (this.sr.EOS) return null;
 		return this.sr.ReadText(StreamUOpts.adReadAll);
 	}
 });
-this.StreamWriterU = this.StreamWriterU || Class.extend({
+this.StreamWriterU = this.StreamWriterU || Class.extend( /** @lends StreamWriterU# */ {
+	/**
+	 * @class Stream writer for a utf-8 text file.
+	 * @param {String} filename name of the text file to open/create.
+	 * @param {Number} specifier of line separator. See {@link StreamUOpts}
+	 * @augments Class
+	 * @constructs
+	 * @throws {Error} when the filename is falsy value or when failed to open file.
+	 */
 	initialize: function(filename, lineSeparator) {
 		if (!filename) {
 			throw new Error('StreamWriterU: filename is not defined.');
@@ -2557,6 +2725,9 @@ this.StreamWriterU = this.StreamWriterU || Class.extend({
 			throw new Error('StreamWriterU: failed to open/create file.');
 		}
 	},
+	/**
+	 * Close current text stream.
+	 */
 	Close: function() {
 		// delete BOM
 		this.sw.Position = 0;
@@ -2569,23 +2740,47 @@ this.StreamWriterU = this.StreamWriterU || Class.extend({
 		this.Save();
 		this.sw.Close();
 	},
+	/**
+	 * Write 1 line to tail of the stream.
+	 * @param {String} text to write.
+	 */
 	WriteLine: function(line) {
 		this.sw.WriteText(line, StreamUOpts.adWriteLine);
 	},
+	/**
+	 * Write text to tail of the stream.
+	 * @param {String} text to write.
+	 */
 	Write: function(contents) {
 		this.sw.WriteText(contents, StreamUOpts.adWriteChar);
 	},
+	/**
+	 * Save current stream to the file.
+	 */
 	Save: function() {
 		this.sw.SaveToFile(this.filename, StreamUOpts.adSaveCreateOverWrite);
 	}
 });
-// INIファイル
-this.Ini = this.Ini || Class.extend({
+this.Ini = this.Ini || Class.extend( /** @lends Ini# */ {
+	/**
+	 * @class Ini file reader.
+	 * @param {String} filename name of the ini file to open.
+	 * @augments Class
+	 * @constructs
+	 * @throws {Error} when the filename is falsy value or when failed to open file.
+	 */
 	initialize: function(filename) {
 		this.sr = new StreamReader(filename);
 	},
+	/**
+	 * Load data from ini file.
+	 * @returns {Object} Deserialized data.
+	 * @throws {Error} when the structure of ini file is invalid.
+	 */
 	Load: function() {
-		var data = {}, currentSection, lineCnt = 0, line, pair, key, val;
+		var data = {},
+			currentSection, lineCnt = 0,
+			line, pair, key, val;
 
 		function isBlankOrComment(line) {
 			line = line.trim();

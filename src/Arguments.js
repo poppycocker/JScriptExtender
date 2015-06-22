@@ -1,4 +1,14 @@
+/** @namespace Arguments */
 this.Arguments = this.Arguments || {
+	/**
+	 * Get arguments given by console.
+	 * @memberof Arguments
+	 * @returns {Object} Deserialized arguments.
+	 * @example
+	 * // (cmd) > cscript foo.wsf arg0 arg1 /arg2:123 /arg3
+	 * var args = Arguments.Get();
+	 * args; => {'0': 'arg0', '1': 'arg1', 'arg2': '123'} // arg3 is undefined
+	 */
 	Get: function() {
 		function convertToArray(collection) {
 			var e = new Enumerator(collection),

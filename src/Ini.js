@@ -1,10 +1,23 @@
-// INIファイル
-this.Ini = this.Ini || Class.extend({
+this.Ini = this.Ini || Class.extend( /** @lends Ini# */ {
+	/**
+	 * @class Ini file reader.
+	 * @param {String} filename name of the ini file to open.
+	 * @augments Class
+	 * @constructs
+	 * @throws {Error} when the filename is falsy value or when failed to open file.
+	 */
 	initialize: function(filename) {
 		this.sr = new StreamReader(filename);
 	},
+	/**
+	 * Load data from ini file.
+	 * @returns {Object} Deserialized data.
+	 * @throws {Error} when the structure of ini file is invalid.
+	 */
 	Load: function() {
-		var data = {}, currentSection, lineCnt = 0, line, pair, key, val;
+		var data = {},
+			currentSection, lineCnt = 0,
+			line, pair, key, val;
 
 		function isBlankOrComment(line) {
 			line = line.trim();

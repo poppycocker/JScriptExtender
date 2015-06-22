@@ -1,6 +1,39 @@
 // Use Leaflet.js's L.Class as a reference
 // http://leafletjs.com/
+
+/** @namespace */
 this.Class = function() {};
+/**
+ * Using Leaflet.js's L.Class as a reference. {@link http://leafletjs.com/}
+ * @param {Object} props Generate an extended class from given props.
+ * @returns {Function} The constructor of extended class.
+ * @example
+ *  var Extended = Class.extend({
+ *    // 'initialize' works as a constructor.
+ *    initialize: function(arg) {
+ *      this.arg = arg;
+ *    },
+ *    // props in 'statics' are set as static(class) members.
+ *    statics: {
+ *      staticFunc: function() {
+ *        return 'static method!';
+ *      },
+ *      staticProp: 'static prop!'
+ *    },
+ *    // this is a instance method.
+ *    func: function() {
+ *      return 'instance method! ' + arg;
+ *    }
+ * });
+ *
+ * // calling static(class) members.
+ * Extended.staticFunc(); // => 'static method!'
+ * Extended.staticProp;   // => 'static prop!'
+ * // constructs with arguments (method 'initialize' will be called).
+ * var ex = new Extended('foo bar');
+ * // calling instance member
+ *  ex.func();   // => 'instance method! foo bar'
+ */
 this.Class.extend = function(props) {
 	var NewClass, F, proto, i, parent;
 	var extend = function(dst) { // (Object[, Object, ...]) ->
