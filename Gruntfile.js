@@ -30,7 +30,6 @@ module.exports = function(grunt) {
                 ].join('\n')
             },
             files: {
-                // 元ファイルの指定
                 src: [
                     'ext_src/es5-shim.js',
                     'ext_src/json3.js',
@@ -43,32 +42,37 @@ module.exports = function(grunt) {
                     'src/StreamWriterU.js',
                     'src/Ini.js'
                 ],
-                // 出力ファイルの指定
                 dest: 'dist/JScriptExtender.js'
             }
         },
         uglify: {
             dist: {
                 files: {
-                    // 出力ファイル: 元ファイル
+                    // dest: src
                     'dist/JScriptExtender-min.js': 'dist/JScriptExtender.js'
+                }
+            }
+        },
+        jsdoc: {
+            dist: {
+                src: ['src/*.js'],
+                options: {
+                    destination: 'doc'
                 }
             }
         },
         watch: {
             js: {
                 files: 'src/*.js',
-                tasks: ['concat', 'uglify']
+                tasks: ['concat', 'uglify', 'jsdoc']
             }
         }
     });
 
-    // プラグインのロード・デフォルトタスクの登録
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.registerTask('default', ['copy', 'concat', 'uglify']);
-
-    // 更新監視は grunt watch でスタート
+    grunt.registerTask('default', ['copy', 'concat', 'uglify', 'jsdoc']);
 };
