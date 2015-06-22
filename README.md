@@ -50,4 +50,5 @@ WScript.Quit(es5Test());
 
 ## API Document
 
-See doc/index.html.
+See the url below.  
+http://poppycocker.github.io/JScriptExtender/doc/Ini.html
