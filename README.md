@@ -56,5 +56,5 @@ WScript.Quit(test());
 ## API Document
 
 See the url below.  
-(Only for additional functions, except es5-shim and JSON3)
+(Only for additional functions, except es5-shim and JSON3)  
 http://poppycocker.github.io/JScriptExtender/doc/index.html
