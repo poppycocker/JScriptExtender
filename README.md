@@ -12,6 +12,7 @@ This library provides following functions to lagacy JScript(e.g. v5.8 on Windows
 * JSON support (from JSON3 https://github.com/bestiejs/json3)
 * and some additional functions
   * Class pattern framework (using Leaflet.js's L.Class as a reference)
+  * Parser for command line arguments
   * Helpers for reading/writing file stream
   * Ini file reader
 
@@ -23,7 +24,11 @@ Include `dist/JScriptExtender.js` in your .wsh script.
 <script language="JavaScript" src="dist/JScriptExtender.js"></script>
 <script language="JavaScript">
 
-function es5Test() {
+function test() {
+  // Get arguments from command line
+  // e.g. if you call script with args "arg0 arg1 /arg2:123"
+  var args = Arguments.Get(); // => {'0': 'arg0', '1': 'arg1', 'arg2': '123'}
+
   // Array's cool methods
   var num = [1, 2, 3, 4, 5].filter(function(v){
     return (v % 2 === 0);
@@ -42,7 +47,7 @@ function es5Test() {
   var iniReader = new Ini('hoge.ini');
   var iniObj = iniReader.Load();
 }
-WScript.Quit(es5Test());
+WScript.Quit(test());
 
 </script>
 </job>
@@ -51,4 +56,5 @@ WScript.Quit(es5Test());
 ## API Document
 
 See the url below.  
-http://poppycocker.github.io/JScriptExtender/doc/Ini.html
+(Only for additional functions, except es5-shim and JSON3)
+http://poppycocker.github.io/JScriptExtender/doc/index.html
